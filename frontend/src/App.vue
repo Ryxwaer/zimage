@@ -60,6 +60,10 @@ async function handleGenerate(prompt) {
   IS_GENERATING.value = true;
   GENERATION_ERROR.value = "";
 
+  // Poll images while generating so the carousel updates even if the
+  // POST response is lost (e.g. reverse-proxy timeout at ~60 s)
+  const IMAGE_POLL = setInterval(() => fetchImages(), 5000);
+
   try {
     const RES = await fetch("/api/generate", {
       method: "POST",
@@ -74,14 +78,22 @@ async function handleGenerate(prompt) {
     });
 
     if (!RES.ok) {
-      const ERR = await RES.json();
-      throw new Error(ERR.detail || "Generation failed");
+      // Response may be HTML (e.g. proxy timeout) — try JSON, fall back to status text
+      let DETAIL = `Generation failed (${RES.status})`;
+      try {
+        const ERR = await RES.json();
+        DETAIL = ERR.detail || DETAIL;
+      } catch { /* non-JSON response body */ }
+      throw new Error(DETAIL);
     }
-
-    await fetchImages();
   } catch (e) {
-    GENERATION_ERROR.value = e.message;
+    // Suppress proxy-timeout errors — the image will appear via polling
+    if (!e.message.includes("502") && !e.message.includes("504") && !e.message.includes("Failed to fetch")) {
+      GENERATION_ERROR.value = e.message;
+    }
   } finally {
+    clearInterval(IMAGE_POLL);
+    await fetchImages();
     IS_GENERATING.value = false;
   }
 }
