@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+/* ── Background Animation ────────────────────────────────────── */
+
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.07;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+
+.blob-1 {
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, #a8a29e, #78716c);
+  top: -15%;
+  left: -10%;
+  animation: drift-1 80s ease-in-out infinite alternate;
+}
+
+.blob-2 {
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, #71717a, #52525b);
+  bottom: -12%;
+  right: -8%;
+  animation: drift-2 90s ease-in-out infinite alternate;
+}
+
+.blob-3 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #92908e, #6b7280);
+  top: 45%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  animation: drift-3 100s ease-in-out infinite alternate;
+}
+
+@keyframes drift-1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(100px, 80px) scale(1.05); }
+  100% { transform: translate(-40px, 50px) scale(0.97); }
+}
+
+@keyframes drift-2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-80px, -60px) scale(1.06); }
+  100% { transform: translate(50px, -30px) scale(0.98); }
+}
+
+@keyframes drift-3 {
+  0%   { transform: translate(-50%, -50%) scale(1); }
+  50%  { transform: translate(-46%, -54%) scale(1.04); }
+  100% { transform: translate(-53%, -47%) scale(0.96); }
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(161, 161, 170, 0.15); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(161, 161, 170, 0.3); }
+
+/* ── Spinner ─────────────────────────────────────────────────── */
+
+.spinner {
+  border: 2px solid rgba(161, 161, 170, 0.15);
+  border-top-color: rgba(228, 228, 231, 0.6);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Transitions ─────────────────────────────────────────────── */
+
+.fade-enter-active, .fade-leave-active { transition: opacity 0.25s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+
+.slide-enter-active, .slide-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.slide-enter-from, .slide-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* ── Selection ───────────────────────────────────────────────── */
+
+::selection {
+  background: rgba(161, 161, 170, 0.2);
+  color: #e4e4e7;
+}

@@ -1,0 +1,35 @@
+services:
+  zimage:
+    build: .
+    image: zimage:latest
+    pull_policy: build
+    container_name: zimage
+    restart: unless-stopped
+    ports:
+      - "8000"
+    volumes:
+      # Persist model cache so it's not re-downloaded on container restart
+      - zimage_models:/models
+      # Persist generated images
+      - zimage_output:/app/generated
+    environment:
+      - MODEL_REPO_ID=Tongyi-MAI/Z-Image-Turbo
+      - MODEL_CACHE_DIR=/models
+      - MODEL_DTYPE=bfloat16
+      - NUM_THREADS=0
+      - OUTPUT_DIR=generated
+      - MAX_HISTORY=50
+    networks:
+      - default
+      - nginx-proxy-manager_default
+    # No GPU required – CPU-only inference
+    # Increase shared memory for PyTorch
+    shm_size: "4g"
+
+volumes:
+  zimage_models:
+  zimage_output:
+
+networks:
+  nginx-proxy-manager_default:
+    external: true

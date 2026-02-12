@@ -1,0 +1,36 @@
+# ── Python ───────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Virtual Environment ─────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Environment ─────────────────────────────────────────────────
+.env
+
+# ── IDE ──────────────────────────────────────────────────────────
+.vscode/
+.idea/
+
+# ── Generated Content ───────────────────────────────────────────
+generated/
+static/
+
+# ── Node / Frontend Build ───────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+
+# ── Model Cache (local dev) ─────────────────────────────────────
+models/
+
+# ── OS ───────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

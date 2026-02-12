@@ -1,0 +1,11 @@
+# ── Large / Generated Directories ────────────────────────────────
+generated/
+static/
+models/
+frontend/node_modules/
+frontend/dist/
+
+# ── Python Cache ─────────────────────────────────────────────────
+__pycache__/
+*.pyc
+.venv/

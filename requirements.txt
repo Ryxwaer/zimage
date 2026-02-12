@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+pydantic-settings
+termcolor
+torch
+diffusers
+transformers
+accelerate
+safetensors
+huggingface-hub
+sentencepiece
+Pillow
+mcp
