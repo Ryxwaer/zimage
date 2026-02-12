@@ -5,11 +5,15 @@ const props = defineProps({
   mcpPath: { type: String, default: "/mcp" },
 });
 
+const TABS = ["mcp", "rest", "prompt"];
+
 const IS_OPEN = ref(false);
 const ACTIVE_TAB = ref("mcp");
 const COPIED = ref(false);
 
-const EFFECTIVE_URL = computed(() => `${window.location.origin}${props.mcpPath}`);
+const ORIGIN = computed(() => window.location.origin);
+const EFFECTIVE_URL = computed(() => `${ORIGIN.value}${props.mcpPath}`);
+const API_URL = computed(() => `${ORIGIN.value}/api`);
 
 const MCP_CONFIG = computed(() =>
   JSON.stringify(
@@ -25,13 +29,41 @@ const MCP_CONFIG = computed(() =>
   )
 );
 
-const AGENT_PROMPT = computed(() =>
-  `Add a new MCP server called "z-image" with the URL "${EFFECTIVE_URL.value}" using Streamable HTTP transport. It provides the tool "generate_image" (params: prompt, width, height, seed, steps) for generating images from text prompts. It is good for generating small profile pictures at 512x512 but also capable of highly realistic 1024x1024 images. You should specify a style with each prompt (e.g. photo, illustration, painting). The model runs on CPU so generation may take 30-120 seconds.`
+const REST_CONFIG = computed(() =>
+  `# Generate an image
+POST ${API_URL.value}/generate
+Content-Type: application/json
+
+{
+  "prompt": "a serene mountain lake at sunset, photography",
+  "width": 512,
+  "height": 512,
+  "steps": 9,
+  "seed": -1
+}
+
+# Response → { url, filename, prompt, width, height,
+#              steps, seed, generation_time_seconds, ... }
+
+# List recent images
+GET ${API_URL.value}/images
+
+# Get model status
+GET ${API_URL.value}/status
+
+# Interactive docs
+${ORIGIN.value}/docs`
 );
 
-const ACTIVE_CONTENT = computed(() =>
-  ACTIVE_TAB.value === "mcp" ? MCP_CONFIG.value : AGENT_PROMPT.value
+const AGENT_PROMPT = computed(() =>
+  `You have access to an image generation API at ${API_URL.value}/generate (POST, JSON body with params: prompt, width, height, seed, steps). For MCP-capable agents, connect to "${EFFECTIVE_URL.value}" using Streamable HTTP transport (tool: generate_image). It is good for generating small profile pictures at 512x512 but also capable of highly realistic 1024x1024 images. You should specify a style with each prompt (e.g. photo, illustration, painting). The model runs on CPU so generation may take 30-120 seconds. Interactive API docs: ${ORIGIN.value}/docs`
 );
+
+const ACTIVE_CONTENT = computed(() => {
+  if (ACTIVE_TAB.value === "mcp") return MCP_CONFIG.value;
+  if (ACTIVE_TAB.value === "rest") return REST_CONFIG.value;
+  return AGENT_PROMPT.value;
+});
 
 function selectTab(tab) {
   ACTIVE_TAB.value = tab;
@@ -62,7 +94,7 @@ async function copyContent() {
 
       <div class="flex gap-1">
         <button
-          v-for="tab in ['mcp', 'prompt']"
+          v-for="tab in TABS"
           :key="tab"
           @click="selectTab(tab)"
           class="px-2.5 py-1 text-[10px] uppercase tracking-widest rounded-full

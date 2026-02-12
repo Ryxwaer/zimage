@@ -6,7 +6,7 @@ services:
     container_name: zimage
     restart: unless-stopped
     ports:
-      - "8000"
+      # - "8000"
     volumes:
       # Persist model cache so it's not re-downloaded on container restart
       - zimage_models:/models

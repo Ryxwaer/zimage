@@ -53,7 +53,11 @@ async def lifespan(app: FastAPI):
 
 APP = FastAPI(
     title="Z-Image Turbo",
-    description="Image generation with Z-Image-Turbo model",
+    description=(
+        "Text-to-image generation API powered by the Z-Image-Turbo model (6B params). "
+        "Good for profile pictures at 512×512 and highly realistic images at 1024×1024. "
+        "Also available via MCP (Streamable HTTP) for agent frameworks that support it."
+    ),
     version="1.0.0",
     lifespan=lifespan,
 )

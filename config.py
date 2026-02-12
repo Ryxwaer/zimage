@@ -31,7 +31,7 @@ class Settings(BaseSettings):
 
     # ── Storage ─────────────────────────────────────────────────────
     OUTPUT_DIR: str = "generated"
-    MAX_HISTORY: int = 50  # Max images to keep in carousel
+    MAX_HISTORY: int = 10  # Max images to keep in carousel
 
     model_config = {
         "env_file": ".env",
